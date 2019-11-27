@@ -1,9 +1,5 @@
 import React from 'react';
 
-import { Rock } from './Rock';
-import { Paper } from './Paper';
-import { Scissor } from './Scissor';
-
 import { Intro } from './Intro';
 import { Playing } from './Playing';
 import { Score } from './Score';
@@ -13,6 +9,8 @@ export class App extends React.Component {
     super(props);
     this.state = {
       gameState: 'playing',
+      userScore: 0,
+      computerScore: 0,
     };
   }
 
@@ -21,8 +19,18 @@ export class App extends React.Component {
 
     const GameStates = {
       intro: <Intro onClick={this.changeState} />,
-      playing: <Playing />,
-      score: <Score />,
+      playing: (
+        <Playing
+          setUserScore={this.setUserScore}
+          setComputerScore={this.setComputerScore}
+        />
+      ),
+      score: (
+        <Score
+          userScore={this.state.userScore}
+          computerScore={this.state.computerScore}
+        />
+      ),
     };
     return GameStates[gameState];
   };
@@ -33,8 +41,35 @@ export class App extends React.Component {
     });
   };
 
+  setUserScore = () => {
+    this.setState(prevState => {
+      return {
+        userScore: prevState.userScore + 1,
+      };
+    }, this.endGame);
+  };
+
+  setComputerScore = () => {
+    this.setState(prevState => {
+      return {
+        computerScore: prevState.computerScore + 1,
+      };
+    }, this.endGame);
+  };
+
+  endGame = () => {
+    const {
+      state: { userScore, computerScore },
+    } = this;
+
+    if (userScore === 5 || computerScore === 5) {
+      this.setState({
+        gameState: 'score',
+      });
+    }
+  };
+
   render() {
-    console.log(this.state);
     return (
       <div className="App">
         <h1>SHIFUMI</h1>
