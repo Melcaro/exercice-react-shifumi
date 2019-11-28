@@ -8,6 +8,7 @@ export class Playing extends React.Component {
       computerChoice: '',
       userScore: 0,
       computerScore: 0,
+      round: 0,
     };
   }
 
@@ -53,10 +54,48 @@ export class Playing extends React.Component {
         };
       }, this.props.setComputerScore);
     }
+    this.setState(prevState => {
+      return {
+        round: prevState.round + 1,
+        previousRound: prevState.round,
+      };
+    });
   };
 
+  setStatsArray = () => {
+    const {
+      userChoice,
+      computerChoice,
+      userScore,
+      computerScore,
+      round,
+    } = this.state;
+    const roundInfos = [
+      { round },
+      { userChoice },
+      { computerChoice },
+      { userScore },
+      { computerScore },
+    ];
+    return (
+      <tr>
+        <td>{round}</td>
+        <td>{userChoice}</td>
+        <td>{computerChoice}</td>
+        <td>{userScore}</td>
+        <td>{computerScore}</td>
+      </tr>
+    );
+  };
   render() {
-    const { userScore, computerScore } = this.state;
+    const {
+      userChoice,
+      computerChoice,
+      userScore,
+      computerScore,
+      round,
+    } = this.state;
+
     return (
       <div>
         Playing
@@ -68,21 +107,34 @@ export class Playing extends React.Component {
         </button>
         {this.state.computerChoice && <div>{this.state.computerChoice}</div>}
         <div>
-          <table style={{ border: '1px solid black' }}>
-              <tr>
-                <th>STATS</th>
-              </tr>
+          <table style={{ border: '1px solid black', width: '80vw' }}>
+            <tr></tr>
             <thead>
+              <tr>
+                <th colSpan="3" style={{ border: '1px solid black' }}>
+                  STATS
+                </th>
+                <th colSpan="2">SCORE</th>
+              </tr>
+              <tr>
+                <th style={{ border: '1px solid black' }}>Round</th>
+                <th style={{ border: '1px solid black' }}>You played</th>
+                <th style={{ border: '1px solid black' }}>Computer played</th>
+                <th style={{ border: '1px solid black' }}>YOU</th>
+                <th style={{ border: '1px solid black' }}>COMPUTER</th>
+              </tr>
             </thead>
             <tbody>
-                <
+              <tr>{this.setStatsArray()}</tr>
+              {/* <tr>
+                <td>{round}</td>
+                <td>{userChoice}</td>
+                <td>{computerChoice}</td>
+                <td>{userScore}</td>
+                <td>{computerScore}</td>
+              </tr> */}
             </tbody>
-
           </table>
-          <ul>
-            <li>YOU : {userScore}</li>
-            <li>COMPUTER : {computerScore}</li>
-          </ul>
         </div>
       </div>
     );
